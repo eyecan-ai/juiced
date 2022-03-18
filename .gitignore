@@ -104,11 +104,3 @@ ENV/
 # IDE settings
 .vscode/
 .idea/
-
-*.eye
-examples/portable_classifier/TVP_LC40_REV1_Luce1/*
-examples/portable_classifier/TVP_LC40_REV1_Luce2/*
-examples/portable_classifier/PET_REV0_Tipo1_*/*
-examples/portable_classifier/PET_REV0_Tipo2_*/*
-examples/portable_classifier/TVP_LC40_REV3_Luce1/*
-examples/portable_classifier/TVP_LC40_REV3_Luce2/*
