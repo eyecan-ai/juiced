@@ -147,7 +147,7 @@ def gui() -> None:
 
     def gravity():
         while True:
-            time.sleep(0.001)
+            time.sleep(0.01)
             scene.update()
 
     # Start the thread setting daemon=True to make it exit as the main thread exits.
