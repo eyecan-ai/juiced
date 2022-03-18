@@ -1,0 +1,13 @@
+regions:
+  - labels:
+      digit: "zero"
+      color: "magenta"
+      position: "left"
+    shape:
+      type: box
+      x: 0.1
+      y: 0.3
+      h: 0.5
+      w: 0.7
+      a: 30.0
+

@@ -1,0 +1,12 @@
+regions:
+  - labels:
+      digit: "four"
+      color: "orange"
+      position: "bottom"
+    shape:
+      type: box
+      x: 0.5
+      y: 0.5
+      h: 0.5
+      w: 0.5
+      a: 0
