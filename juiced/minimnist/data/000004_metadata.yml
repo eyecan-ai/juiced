@@ -1,0 +1,14 @@
+labels:
+  color: green
+  digit: two
+  position: left
+  anomalous: true
+list_idx: 1
+sample_idx: 2
+shape:
+  a: 0
+  h: 0.5
+  type: box
+  w: 0.2
+  x: 0.1
+  y: 0.1

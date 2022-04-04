@@ -1,0 +1,24 @@
+color:
+    type: choice
+    choices:
+        - "magenta"
+        - "blue"
+        - "green"
+        - "orange"
+digit:
+    type: choice
+    choices:
+        - "zero"
+        - "one"
+        - "two"
+        - "three"
+        - "four"
+position:
+    type: choice
+    choices:
+        - "bottom"
+        - "top"
+        - "left"
+        - "right"
+anomalous:
+    type: bool

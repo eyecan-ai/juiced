@@ -1,0 +1,14 @@
+labels:
+  color: magenta
+  digit: zero
+  position: left
+  anomalous: true
+list_idx: 0
+sample_idx: 0
+shape:
+  a: 30.0
+  h: 0.5
+  type: box
+  w: 0.7
+  x: 0.1
+  y: 0.3

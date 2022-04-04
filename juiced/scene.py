@@ -106,23 +106,22 @@ class Sample(QObject):
     def __init__(self, sample: Sample, parent: Optional[QObject] = None) -> None:
         super().__init__(parent)
         id_ = str(int(sample.id))  # BUG: id vs idx bug -> see pipelime 1.0 refactoring
-        image_k = ["image"]  # Toy logic
-        region_k = "metadata.regions"  # Toy logic
+        image_k = "image"  # Toy logic
+        metadata_k = "metadata"  # Toy logic
         dname = parent.name
 
-        self._images = [f"image://pipelime/{dname}/{id_}/{x}" for x in image_k]
-        self._regions = [
-            Region(x["labels"], x["shape"], parent=self)
-            for x in py_.get(sample, region_k)
-        ]
+        meta = py_.get(sample, metadata_k)
 
-    @Property("QVariantList", constant=True)
-    def images(self) -> List[str]:
-        return self._images
+        self._image = f"image://pipelime/{dname}/{id_}/{image_k}"
+        self._region = Region(meta["labels"], meta["shape"], parent=None)
 
-    @Property("QVariantList", constant=True)
-    def regions(self) -> List[Region]:
-        return self._regions
+    @Property(str, constant=True)
+    def image(self) -> str:
+        return self._image
+
+    @Property(Region, constant=True)
+    def region(self) -> Region:
+        return self._region
 
 
 class Dataset(QObject):

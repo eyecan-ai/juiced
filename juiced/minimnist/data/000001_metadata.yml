@@ -1,0 +1,14 @@
+labels:
+  color: blue
+  digit: one
+  position: top
+  anomalous: false
+list_idx: 0
+sample_idx: 1
+shape:
+  a: 0
+  h: 0.1
+  type: box
+  w: 0.2
+  x: 0.2
+  y: 0.4

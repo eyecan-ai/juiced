@@ -1,0 +1,14 @@
+labels:
+  color: orange
+  digit: four
+  position: bottom
+  anomalous: false
+list_idx: 0
+sample_idx: 4
+shape:
+  a: 0
+  h: 0.5
+  type: box
+  w: 0.5
+  x: 0.5
+  y: 0.5
