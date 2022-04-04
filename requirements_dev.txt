@@ -1,0 +1,6 @@
+bump2version>=1
+coverage>=6
+Sphinx>=4.5
+Click>=7
+pytest>=7
+black
