@@ -25,8 +25,7 @@ def gui(input_folder: Path) -> None:
     config = XConfig(this_folder / "config.yml").to_dict()
 
     # Setup scene
-    sseq = UnderfolderReader(input_folder)
-    scene = Scene(sseq)
+    scene = Scene(input_folder)
 
     # Make "config" and "scene" accessible from qml
     context = engine.rootContext()

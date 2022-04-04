@@ -7,27 +7,12 @@ import QtQuick.Shapes
 Item {
     id: root
 
-    // Property containing the selected sample index
-    // Can be browsed with:
-    // - A: previous
-    // - D: next
-    property var selected: 0
+    // Property binded to the selected sample
+    property var sample
+
+    // Enable/Disable dragging of regions shapes
     property var enableDrag: false
 
-    Keys.onPressed: (event)=>{
-        var prev_state = root.enableDrag
-        root.enableDrag = false
-        if (event.key == Qt.Key_A)
-            selected = selected > 0 ? (selected - 1) : scene.dataset.samples.length - 1
-        else if (event.key == Qt.Key_D) 
-            selected = (selected + 1) % scene.dataset.samples.length
-        event.accepted = true;
-        root.enableDrag = prev_state
-    }
-
-    // Property binded to the selected sample
-    property var sample: scene.dataset.samples[selected]
-    
     // Make the content zoomable / draggable
     Zoomable {
         id: zoomable
@@ -48,15 +33,15 @@ Item {
             property var paintedY: (height - paintedHeight) / 2
 
             Shape {
-                id: shape
-                property var region: root.sample.region
+                id: viewShape
+                property var shape: root.sample.shape
 
                 // Transform: Image rf -> GUI rf
-                x: region.shape.x * image.paintedWidth + image.paintedX
-                y: region.shape.y * image.paintedHeight + image.paintedY
-                width: region.shape.w * image.paintedWidth
-                height: region.shape.h * image.paintedHeight
-                rotation: region.shape.angle
+                x: shape.x * image.paintedWidth + image.paintedX
+                y: shape.y * image.paintedHeight + image.paintedY
+                width: shape.w * image.paintedWidth
+                height: shape.h * image.paintedHeight
+                rotation: shape.angle
                 
                 // Make a rectangle using a ShapePath
                 // There is more than one way to do this. The one used here
@@ -69,9 +54,9 @@ Item {
                     strokeStyle: ShapePath.DashLine
                     dashPattern: [ 1, 3 ]
                     startX: 0; startY: 0
-                    PathLine { x: 0; y: shape.height }
-                    PathLine { x: shape.width; y: shape.height }
-                    PathLine { x: shape.width; y: 0 }
+                    PathLine { x: 0; y: viewShape.height }
+                    PathLine { x: viewShape.width; y: viewShape.height }
+                    PathLine { x: viewShape.width; y: 0 }
                     PathLine { x: 0; y: 0 }
                 }
 
@@ -87,17 +72,17 @@ Item {
                 // so I limited the GUI interation to the setting of x and y
                 // properties.
                 Binding {
-                    target: shape.region.shape
+                    target: viewShape.shape
                     property: "x"
-                    value: (shape.x - image.paintedX) / image.paintedWidth
+                    value: (viewShape.x - image.paintedX) / image.paintedWidth
                     delayed: true
                     when: image.paintedWidth > 0 && root.enableDrag
                     restoreMode: Binding.RestoreNone
                 }
                 Binding {
-                    target: shape.region.shape
+                    target: viewShape.shape
                     property: "y"
-                    value: (shape.y - image.paintedY) / image.paintedHeight
+                    value: (viewShape.y - image.paintedY) / image.paintedHeight
                     delayed: true
                     when: image.paintedHeight > 0 && root.enableDrag
                     restoreMode: Binding.RestoreNone

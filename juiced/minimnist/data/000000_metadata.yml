@@ -1,8 +1,8 @@
 labels:
+  anomalous: true
   color: magenta
   digit: zero
   position: left
-  anomalous: true
 list_idx: 0
 sample_idx: 0
 shape:
@@ -10,5 +10,5 @@ shape:
   h: 0.5
   type: box
   w: 0.7
-  x: 0.1
-  y: 0.3
+  x: 0.3643947010000002
+  y: -0.052414234277777895

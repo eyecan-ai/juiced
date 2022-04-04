@@ -49,8 +49,38 @@ Window {
         }
     }
 
+    // Property containing the selected sample index
+    // Can be browsed with:
+    // - A: previous
+    // - D: next
+    property var selected: 0
+
     // Window content
-    SampleViewer {
+    RowLayout {
         anchors.fill: parent
+        SampleViewer {
+            Layout.fillHeight: true
+            Layout.preferredWidth: appWindow.height
+            id: viewer
+            sample: scene.dataset.samples[appWindow.selected]
+            enableDrag: true
+        }
+        LabelingView {
+            id: labeling
+            sample: scene.dataset.samples[appWindow.selected]
+            criteria: scene.dataset.criteria
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+        }
+        Keys.onPressed: (event)=>{
+            var prev_state = viewer.enableDrag
+            viewer.enableDrag = false
+            if (event.key == Qt.Key_A)
+                appWindow.selected = appWindow.selected > 0 ? (appWindow.selected - 1) : scene.dataset.samples.length - 1
+            else if (event.key == Qt.Key_D) 
+                appWindow.selected = (appWindow.selected + 1) % scene.dataset.samples.length
+            event.accepted = true;
+            viewer.enableDrag = prev_state
+        }
     }
 }
