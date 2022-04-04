@@ -1,0 +1,23 @@
+appWindow:
+    width: 1280
+    height: 720
+    title: "Pipelime GUI"
+splashWindow: 
+    timeMillis: 1000
+    width: 700
+    height: 200
+    color: "#fafafa"
+
+colorPalette:
+    - "#001219"
+    - "#005f73"
+    - "#0a9396"
+    - "#94d2bd"
+    - "#e9d8a6"
+    - "#ee9b00"
+    - "#ca6702"
+    - "#bb3e03"
+    - "#ae2012"
+    - "#9b2226"
+
+eyecanColor: "#f04d5d"
