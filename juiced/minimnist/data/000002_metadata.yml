@@ -1,8 +1,10 @@
 labels:
-  color: blue
-  digit: one
-  position: bottom
   anomalous: false
+  color: blue
+  cool: false
+  digit: one
+  holy_pinoly: sasso
+  position: bottom
 list_idx: 1
 sample_idx: 1
 shape:
@@ -10,5 +12,5 @@ shape:
   h: 0.15
   type: box
   w: 0.2
-  x: 0.7
-  y: 0.8
+  x: 0.41880555555555454
+  y: 0.843819444444444

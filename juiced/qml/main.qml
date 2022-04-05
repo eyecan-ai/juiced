@@ -59,28 +59,49 @@ Window {
     RowLayout {
         anchors.fill: parent
         SampleViewer {
-            Layout.fillHeight: true
-            Layout.preferredWidth: appWindow.height
             id: viewer
+            Layout.fillHeight: true
+            Layout.preferredWidth: (appWindow.height + appWindow.width) / 2
             sample: scene.dataset.samples[appWindow.selected]
             enableDrag: true
         }
         LabelingView {
             id: labeling
+            Layout.fillWidth: true
+            Layout.fillHeight: true
             sample: scene.dataset.samples[appWindow.selected]
             criteria: scene.dataset.criteria
-            Layout.fillHeight: true
-            Layout.fillWidth: true
+            enableEdit: true
         }
-        Keys.onPressed: (event)=>{
-            var prev_state = viewer.enableDrag
-            viewer.enableDrag = false
-            if (event.key == Qt.Key_A)
-                appWindow.selected = appWindow.selected > 0 ? (appWindow.selected - 1) : scene.dataset.samples.length - 1
-            else if (event.key == Qt.Key_D) 
-                appWindow.selected = (appWindow.selected + 1) % scene.dataset.samples.length
-            event.accepted = true;
-            viewer.enableDrag = prev_state
+    }
+    
+    // Decorator that temporarely disables two-way bindings to avoid side-effects
+    function withNoBindings(fn) {
+        var prevEnableDrag = viewer.enableDrag
+        var prevEnableEdit = labeling.enableEdit
+        
+        viewer.enableDrag = false
+        labeling.enableEdit = false
+
+        fn()
+
+        viewer.enableDrag = prevEnableDrag
+        labeling.enableEdit = prevEnableEdit
+    }
+
+    // Global keyboard shortcuts
+    Shortcut {
+        sequence: "A"
+        function decrement() {
+            appWindow.selected = appWindow.selected > 0 ? (appWindow.selected - 1) : scene.dataset.samples.length - 1
         }
+        onActivated: { appWindow.withNoBindings(decrement) }
+    }
+    Shortcut {
+        sequence: "D"
+        function increment() {
+            appWindow.selected = (appWindow.selected + 1) % scene.dataset.samples.length
+        }
+        onActivated: { appWindow.withNoBindings(increment) }
     }
 }

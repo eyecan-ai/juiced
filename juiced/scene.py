@@ -7,9 +7,10 @@ import pipelime
 import pipelime.sequences.samples as plsamples
 import pydash as py_
 from pipelime.sequences.streams.underfolder import UnderfolderStream
-from PySide6.QtCore import Property, QObject, Signal
+from PySide6.QtCore import Property, QObject, Signal, Slot
 
 from image_provider import PipelimeImageProvider
+from juiced.criterion import Criterion, CriterionProxy
 
 
 class OrientedBBox(QObject):
@@ -86,7 +87,8 @@ class OrientedBBox(QObject):
 class Sample(QObject):
     """A sample with an image, a region and labels"""
 
-    itemChanged = Signal(int, str)
+    itemChanged = Signal(int, str, str)
+    labelsChanged = Signal()
 
     def __init__(
         self, sample: plsamples.Sample, parent: Optional[QObject] = None
@@ -108,41 +110,31 @@ class Sample(QObject):
             raise NotImplementedError("I'm too lazy to implement this")
 
         self._shape.dataChanged.connect(self.onShapeChanged)
+        self.labelsChanged.connect(self.onLabelsChanged)
 
     def onShapeChanged(self):
-        self.itemChanged.emit(self._idx, "metadata")
+        self.itemChanged.emit(self._idx, "metadata", "dict")
 
     def onLabelsChanged(self):
-        self.itemChanged.emit(self._idx, "metadata")
+        self.itemChanged.emit(self._idx, "metadata", "dict")
 
     @Property(str, constant=True)
     def image(self) -> str:
         return self._image
 
-    @Property("QVariant", constant=True)
+    @Property("QVariant", notify=labelsChanged)
     def labels(self) -> Dict[str, Any]:
         return self._labels
 
-    @Property("QVariant", constant=True)
-    def shape(self) -> Dict[str, Any]:
+    @Slot(str, "QVariant")
+    def setLabel(self, name: str, value: Any) -> None:
+        if self._labels.get(name) != value:
+            self._labels[name] = value
+            self.labelsChanged.emit()
+
+    @Property(OrientedBBox, constant=True)
+    def shape(self) -> OrientedBBox:
         return self._shape
-
-
-class Criterion(QObject):
-    def __init__(
-        self, name: str, data: Dict[str, Any], parent: Optional[QObject] = None
-    ) -> None:
-        super().__init__(parent)
-        self._name = name
-        self._data = data
-
-    @Property(str, constant=True)
-    def name(self) -> str:
-        return self._name
-
-    @Property("QVariant", constant=True)
-    def data(self) -> Dict[str, Any]:
-        return self._data
 
 
 class Dataset(QObject):
@@ -160,15 +152,19 @@ class Dataset(QObject):
 
         criteria_k = "criteria"  # TODO: toy logic
         criteria = py_.get(stream.get_sample(0), criteria_k)
-        criteria = sorted(list(criteria.items()), key=lambda x: x[0])
-        self._criteria = [Criterion(name, data) for name, data in criteria]
+        self._criteria = [CriterionProxy(Criterion.parse_obj(x)) for x in criteria]
 
         for x in self._samples:
             x.itemChanged.connect(self.onItemChanged)
+            for c in self._criteria:
+                if c.name not in x.labels:
+                    x.setLabel(c.name, c.default)
 
-    def onItemChanged(self, idx: int, name: str) -> None:
-        data, _ = self._stream.get_data(idx, name, "dict")
-        self._stream.set_data(idx, name, data, "dict")
+    def onItemChanged(self, idx: int, name: str, format: str) -> None:
+        """When an item is changed, automatically stream it to filesystem"""
+
+        data, _ = self._stream.get_data(idx, name, format)
+        self._stream.set_data(idx, name, data, format)
 
     @Property("QVariantList", constant=True)
     def samples(self) -> List[Sample]:
@@ -179,7 +175,7 @@ class Dataset(QObject):
         return self._name
 
     @Property("QVariantList", constant=True)
-    def criteria(self) -> List[Criterion]:
+    def criteria(self) -> List[CriterionProxy]:
         return self._criteria
 
 

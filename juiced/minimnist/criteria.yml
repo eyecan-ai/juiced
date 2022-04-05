@@ -1,25 +1,40 @@
-color:
-    type: choice
+- name: color
+  type: choice
+  default: magenta
+  data:
     choices:
-        - "magenta"
-        - "blue"
-        - "green"
-        - "orange"
-digit:
-    type: choice
-    choices:
-        - "zero"
-        - "one"
-        - "two"
-        - "three"
-        - "four"
-position:
-    type: choice
-    choices:
-        - "bottom"
-        - "top"
-        - "left"
-        - "right"
-anomalous:
-    type: bool
+        - magenta
+        - blue
+        - green
+        - orange
 
+- name: digit
+  type: choice
+  default: zero
+  data:
+    choices:
+        - zero
+        - one
+        - two
+        - three
+        - four
+
+- name: position
+  type: choice
+  default: bottom
+  data:
+    choices:
+        - bottom
+        - top
+        - left
+        - right
+
+- name: anomalous
+  type: bool
+  default: true
+  data: {}
+  
+- name: cool
+  type: bool
+  default: false
+  data: {}

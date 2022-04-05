@@ -1,8 +1,10 @@
 labels:
+  anomalous: false
   color: green
+  cool: false
   digit: two
+  holy_pinoly: sasso
   position: top
-  anomalous: true
 list_idx: 0
 sample_idx: 2
 shape:
@@ -10,5 +12,5 @@ shape:
   h: 0.4
   type: box
   w: 0.4
-  x: 0.2
-  y: 0.4
+  x: 0.3236111111111112
+  y: -0.03333333333333333
