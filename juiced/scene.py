@@ -11,6 +11,7 @@ from PySide6.QtCore import Property, QObject, Signal, Slot
 
 from image_provider import PipelimeImageProvider
 from juiced.criterion import Criterion, CriterionProxy
+from juiced.naming import Naming
 
 
 class OrientedBBox(QObject):
@@ -90,20 +91,17 @@ class Sample(QObject):
     itemChanged = Signal(int, str, str)
     labelsChanged = Signal()
 
-    def __init__(
-        self, sample: plsamples.Sample, parent: Optional[QObject] = None
-    ) -> None:
+    def __init__(self, sample: plsamples.Sample, parent: Dataset) -> None:
         super().__init__(parent)
-        image_k = "image"  # TODO Toy logic
-        labels_k = "metadata.labels"  # TODO Toy logic
-        shape_k = "metadata.shape"  # TODO Toy logic
         dname = parent.name
+        naming = parent.naming
+        self._naming = naming
 
         self._idx = sample.id
-        self._image = f"image://pipelime/{dname}/{sample.id}/{image_k}"
-        self._labels = py_.get(sample, labels_k)
+        self._image = f"image://pipelime/{dname}/{sample.id}/{naming.image}"
+        self._labels = py_.get(sample, naming.labels)
 
-        shape = py_.get(sample, shape_k)
+        shape = py_.get(sample, naming.shape)
         if shape["type"] == "box":
             self._shape = OrientedBBox(shape, parent=self)
         else:
@@ -113,10 +111,10 @@ class Sample(QObject):
         self.labelsChanged.connect(self.onLabelsChanged)
 
     def onShapeChanged(self):
-        self.itemChanged.emit(self._idx, "metadata", "dict")
+        self.itemChanged.emit(self._idx, self._naming.shape.split(".")[0], "dict")
 
     def onLabelsChanged(self):
-        self.itemChanged.emit(self._idx, "metadata", "dict")
+        self.itemChanged.emit(self._idx, self._naming.labels.split(".")[0], "dict")
 
     @Property(str, constant=True)
     def image(self) -> str:
@@ -141,17 +139,19 @@ class Dataset(QObject):
     """A sequence of samples with a name"""
 
     def __init__(
-        self, stream: UnderfolderStream, name: str, parent: Optional[QObject] = None
+        self,
+        stream: UnderfolderStream,
+        name: str,
+        naming: Naming,
+        parent: Optional[QObject] = None,
     ) -> None:
         super().__init__(parent)
         self._stream = stream
         self._name = name
-        self._samples = [
-            Sample(stream.get_sample(i), parent=self) for i in range(len(stream))
-        ]
+        self._naming = naming
+        self._samples = [Sample(stream.get_sample(i), self) for i in range(len(stream))]
 
-        criteria_k = "criteria"  # TODO: toy logic
-        criteria = py_.get(stream.get_sample(0), criteria_k)
+        criteria = py_.get(stream.get_sample(0), self._naming.criteria)
         self._criteria = [CriterionProxy(Criterion.parse_obj(x)) for x in criteria]
 
         for x in self._samples:
@@ -159,6 +159,10 @@ class Dataset(QObject):
             for c in self._criteria:
                 if c.name not in x.labels:
                     x.setLabel(c.name, c.default)
+
+    @property
+    def naming(self) -> Naming:
+        return self._naming
 
     def onItemChanged(self, idx: int, name: str, format: str) -> None:
         """When an item is changed, automatically stream it to filesystem"""
@@ -182,13 +186,20 @@ class Dataset(QObject):
 class Scene(QObject):
     """Root scene object"""
 
-    def __init__(self, dataset: Path, parent: Optional[QObject] = None) -> None:
+    def __init__(
+        self,
+        dataset: Path,
+        naming: Optional[Naming] = None,
+        parent: Optional[QObject] = None,
+    ) -> None:
         super().__init__(parent)
+        if naming is None:
+            naming = Naming()
 
         dataset_name = "dataset"
         stream = UnderfolderStream(dataset)
         PipelimeImageProvider.get_instance().add_dataset(stream.reader, dataset_name)
-        self._dataset = Dataset(stream, dataset_name)
+        self._dataset = Dataset(stream, dataset_name, naming)
 
     @Property(Dataset, constant=True)
     def dataset(self) -> Dataset:

@@ -1,7 +1,7 @@
 labels:
   anomalous: false
   color: green
-  cool: false
+  cool: true
   digit: four
   position: bottom
 list_idx: 0

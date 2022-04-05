@@ -32,9 +32,7 @@
 - name: anomalous
   type: bool
   default: true
-  data: {}
   
 - name: cool
   type: bool
   default: false
-  data: {}

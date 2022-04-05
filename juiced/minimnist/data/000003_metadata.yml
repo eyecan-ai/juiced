@@ -1,7 +1,7 @@
 labels:
   anomalous: false
   color: green
-  cool: false
+  cool: true
   digit: two
   holy_pinoly: sasso
   position: top
