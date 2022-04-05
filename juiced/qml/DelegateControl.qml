@@ -25,6 +25,7 @@ RowLayout {
     Loader { 
         id: loader 
         Layout.alignment: Qt.AlignRight
+        Layout.fillWidth: true
     }
 
 }

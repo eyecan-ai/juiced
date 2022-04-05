@@ -1,8 +1,9 @@
 labels:
   anomalous: true
+  beauty: 0.5
   color: green
   cool: false
-  digit: two
+  digit: 2
   position: left
 list_idx: 1
 sample_idx: 2

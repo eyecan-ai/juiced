@@ -1,8 +1,9 @@
 labels:
   anomalous: false
+  beauty: 0.9
   color: green
   cool: true
-  digit: two
+  digit: 2
   position: right
 list_idx: 2
 sample_idx: 2
@@ -11,5 +12,5 @@ shape:
   h: 0.1
   type: box
   w: 0.2
-  x: 0.7986111111111115
-  y: 0.45000000000000034
+  x: 0.7986111111111114
+  y: 0.4500000000000003

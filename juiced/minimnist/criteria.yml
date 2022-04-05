@@ -9,15 +9,19 @@
         - orange
 
 - name: digit
-  type: choice
+  type: int
   default: zero
   data:
-    choices:
-        - zero
-        - one
-        - two
-        - three
-        - four
+    from: 0
+    to: 9
+
+- name: beauty
+  type: range
+  default: 0.5
+  data:
+    from: 0.0
+    to: 1.0
+    step: 0.1
 
 - name: position
   type: choice
@@ -36,3 +40,4 @@
 - name: cool
   type: bool
   default: false
+

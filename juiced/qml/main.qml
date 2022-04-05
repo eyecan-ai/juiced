@@ -104,4 +104,8 @@ Window {
         }
         onActivated: { appWindow.withNoBindings(increment) }
     }
+    Shortcut {
+        sequence: "Q"
+        onActivated: { appWindow.close() }
+    }
 }

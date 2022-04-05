@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 import Qt.labs.qmlmodels
 
 // Dynamically loaded labeling controls
@@ -84,6 +85,64 @@ Item {
                     }
                 }
             } 
+        }
+
+        // Discrete integer choice
+        DelegateChoice {
+
+            roleValue: "int"
+
+            DelegateControl {
+                entryName: modelData.name
+                content: SpinBox {
+                    id: spinBox
+                    from: modelData.data.from
+                    to: modelData.data.to
+
+                    // Python -> QML
+                    value: sample.labels[modelData.name]
+
+                    // QML -> Python
+                    // Cannot use Binding, must use a signal handler
+                    onValueChanged: {
+                        if (enableEdit) {
+                            sample.setLabel(modelData.name, spinBox.value)
+                        }
+                    }
+                }
+            }
+        }
+
+        // Regression labeling
+        DelegateChoice {
+
+            roleValue: "range"
+
+            DelegateControl {
+                entryName: modelData.name
+                content: ColumnLayout {
+                    id: rangeDelegate 
+                    Text { text: slider.value.toFixed(4) }
+                    Slider {
+                        id: slider
+                        Layout.fillWidth: true
+                        from: modelData.data.from
+                        to: modelData.data.to
+                        stepSize: modelData.data.step
+                        snapMode: Slider.SnapAlways
+
+                        // Python -> QML
+                        value: sample.labels[modelData.name]
+
+                        // QML -> Python
+                        onValueChanged: {
+                            if (enableEdit) {
+                                sample.setLabel(modelData.name, slider.value)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
