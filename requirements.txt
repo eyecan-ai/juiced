@@ -1,0 +1,7 @@
+choixe
+pipelime
+PySide6
+pydantic
+pydash
+numpy
+Click

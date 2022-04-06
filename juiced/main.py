@@ -39,7 +39,7 @@ def gui(input_folder: Path) -> None:
     engine.addImageProvider("pipelime", provider)
 
     # Start the app
-    engine.load(QUrl(str(this_folder / "qml" / "main.qml")))
+    engine.load(QUrl.fromLocalFile(str(this_folder / "qml" / "main.qml")))
     exit_code = app.exec()
     del engine
     sys.exit(exit_code)

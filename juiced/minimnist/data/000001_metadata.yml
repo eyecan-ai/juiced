@@ -1,6 +1,6 @@
 labels:
   anomalous: false
-  beauty: 1.0
+  beauty: 0.8
   color: blue
   cool: false
   digit: 1
@@ -12,5 +12,5 @@ shape:
   h: 0.1
   type: box
   w: 0.2
-  x: 0.43194444444444446
-  y: 0.006944444444444484
+  x: 0.4319444444444445
+  y: 0.006944444444444483
