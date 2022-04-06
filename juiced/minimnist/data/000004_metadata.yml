@@ -1,6 +1,6 @@
 labels:
   anomalous: true
-  beauty: 0.5
+  beauty: 0.30000000000000004
   color: green
   cool: false
   digit: 2
@@ -8,9 +8,9 @@ labels:
 list_idx: 1
 sample_idx: 2
 shape:
-  a: 0
-  h: 0.5
+  angle: 0
+  h: 5
   type: box
-  w: 0.2
-  x: 0.022222222222222223
-  y: 0.25972222222222224
+  w: 2
+  x: 0.3045555555555557
+  y: 10.423722222222208

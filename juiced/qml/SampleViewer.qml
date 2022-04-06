@@ -37,11 +37,11 @@ Item {
                 property var shape: root.sample.shape
 
                 // Transform: Image rf -> GUI rf
-                x: shape.x * image.paintedWidth + image.paintedX
-                y: shape.y * image.paintedHeight + image.paintedY
-                width: shape.w * image.paintedWidth
-                height: shape.h * image.paintedHeight
-                rotation: shape.angle
+                x: shape.x / image.sourceSize.width * image.paintedWidth + image.paintedX
+                y: shape.y / image.sourceSize.height * image.paintedHeight + image.paintedY
+                width: shape.w / image.sourceSize.width * image.paintedWidth
+                height: shape.h / image.sourceSize.height * image.paintedHeight
+                rotation: shape.angle * 180 / Math.PI
                 
                 // Make a rectangle using a ShapePath
                 // There is more than one way to do this. The one used here
@@ -74,7 +74,7 @@ Item {
                 Binding {
                     target: viewShape.shape
                     property: "x"
-                    value: (viewShape.x - image.paintedX) / image.paintedWidth
+                    value: (viewShape.x - image.paintedX) / image.paintedWidth * image.sourceSize.width
                     delayed: true
                     when: image.paintedWidth > 0 && root.enableDrag
                     restoreMode: Binding.RestoreNone
@@ -82,7 +82,7 @@ Item {
                 Binding {
                     target: viewShape.shape
                     property: "y"
-                    value: (viewShape.y - image.paintedY) / image.paintedHeight
+                    value: (viewShape.y - image.paintedY) / image.paintedHeight * image.sourceSize.height
                     delayed: true
                     when: image.paintedHeight > 0 && root.enableDrag
                     restoreMode: Binding.RestoreNone

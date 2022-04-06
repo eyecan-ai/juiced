@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from math import pi
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -75,12 +76,12 @@ class OrientedBBox(QObject):
 
     @Property(float, notify=angleChanged)
     def angle(self) -> float:
-        return self._shape["a"]
+        return self._shape["angle"]
 
     @angle.setter
     def angle(self, value: float) -> None:
         if value != self.angle:
-            self._shape["a"] = value
+            self._shape["angle"] = value
             self.angleChanged.emit()
             self.dataChanged.emit()
 
