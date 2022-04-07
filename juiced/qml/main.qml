@@ -56,22 +56,32 @@ Window {
     property var selected: 0
 
     // Window content
-    RowLayout {
+    ColumnLayout {
         anchors.fill: parent
-        SampleViewer {
-            id: viewer
-            Layout.fillHeight: true
-            Layout.preferredWidth: (appWindow.height + appWindow.width) / 2
-            sample: scene.dataset.samples[appWindow.selected]
-            enableDrag: true
+        RowLayout {
+            Layout.fillWidth: true
+            Text {
+                text: 'Sample ' + (appWindow.selected + 1) + " / " + scene.dataset.samples.length
+            }
         }
-        LabelingView {
-            id: labeling
+        RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            sample: scene.dataset.samples[appWindow.selected]
-            criteria: scene.dataset.criteria
-            enableEdit: true
+            SampleViewer {
+                id: viewer
+                Layout.fillHeight: true
+                Layout.preferredWidth: (appWindow.height + appWindow.width) / 2
+                sample: scene.dataset.samples[appWindow.selected]
+                enableDrag: true
+            }
+            LabelingView {
+                id: labeling
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                sample: scene.dataset.samples[appWindow.selected]
+                criteria: scene.dataset.criteria
+                enableEdit: true
+            }
         }
     }
     
@@ -89,20 +99,28 @@ Window {
         labeling.enableEdit = prevEnableEdit
     }
 
+    function decrement() {
+        function _decrement() {
+            appWindow.selected = appWindow.selected > 0 ? (appWindow.selected - 1) : scene.dataset.samples.length - 1
+        }
+        appWindow.withNoBindings(_decrement)
+    }
+
+    function increment() {
+        function _increment() {
+            appWindow.selected = (appWindow.selected + 1) % scene.dataset.samples.length
+        }
+        appWindow.withNoBindings(_increment)
+    }
+
     // Global keyboard shortcuts
     Shortcut {
         sequence: "A"
-        function decrement() {
-            appWindow.selected = appWindow.selected > 0 ? (appWindow.selected - 1) : scene.dataset.samples.length - 1
-        }
-        onActivated: { appWindow.withNoBindings(decrement) }
+        onActivated: { appWindow.decrement() }
     }
     Shortcut {
         sequence: "D"
-        function increment() {
-            appWindow.selected = (appWindow.selected + 1) % scene.dataset.samples.length
-        }
-        onActivated: { appWindow.withNoBindings(increment) }
+        onActivated: { appWindow.increment() }
     }
     Shortcut {
         sequence: "Q"
