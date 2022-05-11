@@ -75,7 +75,7 @@ def gui() -> None:
 
     # Start the app
     this_folder = Path(__file__).parent
-    engine.load(QUrl(str(this_folder / "main.qml")))
+    engine.load(QUrl.fromLocalFile(str(this_folder / "main.qml")))
     exit_code = app.exec()
     del engine
     sys.exit(exit_code)
